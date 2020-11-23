@@ -1,33 +1,49 @@
 pipeline {
     agent any
-
     stages {
-        
-        stage('Building') {
-            steps {
-                echo 'The Code will be now be built into an artifact'
-            }
+        stage('One') {
+                steps {
+                        echo 'Hi, this is Zulaikha from edureka'
+
+                }
         }
-        stage('Artifact Archiving') {
-            steps {
-                echo 'The Artifact will be uploaded to an artifact repository'
-            }
+            stage('Two'){
+
+                steps {
+                        input('Do you want to proceed?')
         }
-        stage('Testing') {
-            steps {
-                echo 'The Artifact will be tested'
             }
+        stage('Three') {
+                when {
+                        not {
+                                branch "master"
+                        }
+                }
+                steps {
+                        echo "Hello"
+                        }
         }
-        stage('Staging') {
-            steps {
-                echo 'The Artifact is staged onto the staging server'
-            }
+        stage('Four') {
+                parallel {
+                        stage('Unit Test') {
+                                steps{
+                                        echo "Running the unit test..."
+                                }
+                        }
+                        stage('Integration test') {
+                        agent {
+                                docker {
+                                        reuseNode false
+                                        image 'ubuntu'
+                                        }
+                        }
+                                steps {
+                                        echo 'Running the integration test..'
+                                }
+
+                        }  }
         }
-        
-        stage('Deploy') {
-            steps {
-                echo 'The software will now be deployed!'
-            }
-        }
-    }    
+    }
 }
+
+
